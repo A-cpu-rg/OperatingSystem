@@ -1,0 +1,22 @@
+# File Organizer Journal
+# Format: timestamp|operation|completed|source|dest
+SESSION_START=19
+1770214453|1|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/Documents|
+1770214453|1|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/Images|
+1770214453|1|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/Videos|
+1770214453|1|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/Music|
+1770214453|1|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/Archives|
+1770214453|1|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/Code|
+1770214453|1|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/Others|
+1770214453|0|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/music.wav|/Users/abhijeetkrshah/Desktop/os_project/test_files/Music/music.wav
+1770214453|0|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/notes.txt|/Users/abhijeetkrshah/Desktop/os_project/test_files/Documents/notes.txt
+1770214453|0|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/code.py|/Users/abhijeetkrshah/Desktop/os_project/test_files/Code/code.py
+1770214453|0|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/backup.rar|/Users/abhijeetkrshah/Desktop/os_project/test_files/Archives/backup.rar
+1770214453|0|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/video.mp4|/Users/abhijeetkrshah/Desktop/os_project/test_files/Videos/video.mp4
+1770214453|0|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/photo.jpg|/Users/abhijeetkrshah/Desktop/os_project/test_files/Images/photo.jpg
+1770214453|0|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/script.js|/Users/abhijeetkrshah/Desktop/os_project/test_files/Code/script.js
+1770214453|0|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/archive.zip|/Users/abhijeetkrshah/Desktop/os_project/test_files/Archives/archive.zip
+1770214453|0|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/movie.mkv|/Users/abhijeetkrshah/Desktop/os_project/test_files/Videos/movie.mkv
+1770214453|0|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/report.pdf|/Users/abhijeetkrshah/Desktop/os_project/test_files/Documents/report.pdf
+1770214453|0|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/image.png|/Users/abhijeetkrshah/Desktop/os_project/test_files/Images/image.png
+1770214453|0|1|/Users/abhijeetkrshah/Desktop/os_project/test_files/song.mp3|/Users/abhijeetkrshah/Desktop/os_project/test_files/Music/song.mp3

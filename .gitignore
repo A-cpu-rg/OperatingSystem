@@ -1,0 +1,32 @@
+# System Files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Node Modules (Frontend)
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# C Build Artifacts (Backend)
+backend/*.o
+backend/src/*.o
+backend/file_organizer
+backend/*.dSYM/
+
+# Runtime Files
+*.log
+backend/.file_organizer_journal
+backend/.file_organizer_journal.tmp
+
+# Editor Config
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Verification/Artifacts (if you want to exclude agent artifacts from repo)
+# I will leave them out as user might want the code only
+.gemini/
