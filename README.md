@@ -90,5 +90,4 @@ os_project/
 
 - **Project**: File Organizer App
 - **Team**: Alpha
-- **Evaluation**: 6th Feb 2026, 12:45 PM
-- **Venue**: A401 Cabin no. 5
+
