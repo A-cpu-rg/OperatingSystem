@@ -1,8 +1,38 @@
+import { useState } from 'react';
 import { useFileSystem } from '../context/FileSystemContext';
-import { getFileIcon } from '../data/sampleFiles';
+import { getFileIcon, generateId } from '../data/sampleFiles';
 
 export default function FileExplorer() {
-    const { files, isOrganized, organizedFiles, categories, currentFileIndex } = useFileSystem();
+    const { files, isOrganized, organizedFiles, categories, currentFileIndex, deleteFile, uploadFile } = useFileSystem();
+    const [newFileName, setNewFileName] = useState('');
+
+    const handleUpload = (e) => {
+        e.preventDefault();
+        if (!newFileName.trim()) return;
+
+        // Give it a fake size between 1KB and 5MB
+        const fakeSize = Math.floor(Math.random() * 5000) + 1;
+        const sizeStr = fakeSize > 1000 ? `${(fakeSize / 1024).toFixed(1)} MB` : `${fakeSize} KB`;
+
+        // Determine category based on extension (simple check)
+        const ext = newFileName.split('.').pop().toLowerCase();
+        let cat = 'others';
+        if (['pdf', 'doc', 'docx', 'txt', 'xlsx', 'pptx'].includes(ext)) cat = 'documents';
+        if (['jpg', 'png', 'svg', 'gif'].includes(ext)) cat = 'images';
+        if (['mp4', 'mkv', 'mov'].includes(ext)) cat = 'videos';
+        if (['mp3', 'wav'].includes(ext)) cat = 'music';
+        if (['zip', 'rar'].includes(ext)) cat = 'archives';
+        if (['js', 'jsx', 'py', 'c', 'cpp'].includes(ext)) cat = 'code';
+
+        uploadFile({
+            id: generateId(),
+            name: newFileName,
+            extension: ext,
+            size: sizeStr,
+            category: cat
+        });
+        setNewFileName('');
+    };
 
     if (isOrganized) {
         return (
@@ -42,6 +72,13 @@ export default function FileExplorer() {
                                                 <div className="file-name">{file.name}</div>
                                                 <div className="file-meta">{file.size}</div>
                                             </div>
+                                            <button
+                                                className="file-delete-btn"
+                                                onClick={() => deleteFile(file.id, true, cat)}
+                                                title="Delete file"
+                                            >
+                                                🗑️
+                                            </button>
                                         </div>
                                     ))}
                                 </div>
@@ -61,6 +98,19 @@ export default function FileExplorer() {
                 <span className="panel-header-count">{files.length} files</span>
             </div>
             <div className="panel-content">
+                <form className="upload-form" onSubmit={handleUpload}>
+                    <input
+                        className="upload-input"
+                        type="text"
+                        value={newFileName}
+                        onChange={e => setNewFileName(e.target.value)}
+                        placeholder="e.g. model_weights.pt"
+                    />
+                    <button type="submit" className="upload-btn" disabled={!newFileName.trim()}>
+                        Upload
+                    </button>
+                </form>
+
                 <div className="file-list">
                     {files.map((file, idx) => (
                         <div
@@ -75,6 +125,13 @@ export default function FileExplorer() {
                             <span className={`file-badge badge-${file.category}`}>
                                 {file.category}
                             </span>
+                            <button
+                                className="file-delete-btn"
+                                onClick={() => deleteFile(file.id, false, null)}
+                                title="Delete file"
+                            >
+                                🗑️
+                            </button>
                         </div>
                     ))}
                 </div>
