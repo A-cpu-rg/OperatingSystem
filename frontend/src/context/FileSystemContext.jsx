@@ -39,7 +39,7 @@ export function FileSystemProvider({ children }) {
         { id: generateId(), type: 'info', unread: true, title: 'Welcome to FileOrganizer!', desc: 'Upload files from your system to get started. Click "Upload" to select files.', time: 'Just now' },
     ]);
     const [toasts, setToasts] = useState([]); // ✅ Real-time floating toasts
-    const MAX_STORAGE = 1024 ** 3; // 1 GB (demo limit)
+    const MAX_STORAGE = 15 * (1024 ** 3); // 15 GB (demo limit)
 
     // ── syscall logger ───────────────────────────────────────────────
     const syslog = useCallback((call, result = '0', type = 'ok') => {
@@ -189,6 +189,15 @@ export function FileSystemProvider({ children }) {
         }
 
         if (uniqueFiles.length === 0) return;
+
+        // ✅ Quota enforcement — block upload if it exceeds MAX_STORAGE
+        const incomingBytes = uniqueFiles.reduce((acc, f) => acc + f.size, 0);
+        if (totalUsedBytes + incomingBytes > MAX_STORAGE) {
+            syslog(`ENOSPC — upload failed: quota exceeded`, '-1', 'error');
+            addNotification('danger', `Upload Failed: Storage Full`,
+                `You have exceeded the 15.0 GB storage limit. Please delete some files first.`);
+            return;
+        }
 
         const newFiles = uniqueFiles.map(fileObj => {
             const ext = fileObj.name.split('.').pop()?.toLowerCase() || 'dat';
