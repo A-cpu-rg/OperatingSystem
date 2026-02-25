@@ -27,6 +27,7 @@ function PreviewModal({ file, onClose, onToggleFav, onDelete, isOrganized }) {
     const isImg = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp'].includes(ext);
     const isVid = ['mp4', 'mkv', 'mov', 'avi', 'webm'].includes(ext);
     const isAudio = ['mp3', 'wav', 'flac', 'aac', 'ogg'].includes(ext);
+    const isPdf = ext === 'pdf';
 
     const handleDownload = () => {
         if (!file.originalFile) { alert('Demo files cannot be downloaded. Upload a real file to download it.'); return; }
@@ -58,6 +59,8 @@ function PreviewModal({ file, onClose, onToggleFav, onDelete, isOrganized }) {
                             <div className="preview-placeholder-icon">🎵</div>
                             <audio src={objUrl} controls className="preview-audio" />
                         </div>
+                    ) : isPdf ? (
+                        <iframe src={objUrl} title={file.name} style={{ width: '100%', height: '400px', border: 'none', borderRadius: 8, background: 'white' }} />
                     ) : text !== null ? (
                         <div className="preview-code">{text.slice(0, 3000)}{text.length > 3000 ? '\n\n... (truncated)' : ''}</div>
                     ) : (
@@ -659,6 +662,42 @@ export default function Dashboard() {
     const [searchQuery, setSearchQuery] = useState('');
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
+    // ── Drag & Drop ───────────────────────────────────────────────
+    const [isDragging, setIsDragging] = useState(false);
+
+    const handleDragOver = useCallback((e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!isDragging) setIsDragging(true);
+    }, [isDragging]);
+
+    const handleDragLeave = useCallback((e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+    }, []);
+
+    const handleDrop = useCallback((e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+        if (e.dataTransfer.files?.length) uploadFile(e.dataTransfer.files);
+    }, [uploadFile]);
+
+    // ── Context Menu ──────────────────────────────────────────────
+    const [contextMenu, setContextMenu] = useState(null);
+
+    useEffect(() => {
+        const hideContextMenu = () => setContextMenu(null);
+        document.addEventListener('click', hideContextMenu);
+        return () => document.removeEventListener('click', hideContextMenu);
+    }, []);
+
+    const handleContextMenu = (e, file, cat = null) => {
+        e.preventDefault();
+        setContextMenu({ x: e.pageX, y: e.pageY, file, cat });
+    };
+
     const counts = getCategoryCounts();
     const totalFiles = Object.values(counts).reduce((a, b) => a + b, 0);
 
@@ -704,7 +743,18 @@ export default function Dashboard() {
 
     // ── Dashboard / All Files / Favorites ─────────────────────────
     return (
-        <div className="main-content">
+        <div
+            className={`main-content ${isDragging ? 'dragging' : ''}`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+        >
+            {isDragging && (
+                <div className="drag-overlay">
+                    <div className="drag-overlay-icon">📥</div>
+                    <h2>Drop files here to upload</h2>
+                </div>
+            )}
             <input type="file" multiple ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileSelect} />
 
             {/* Dashboard only */}
@@ -799,7 +849,7 @@ export default function Dashboard() {
                                         <span className="org-count">{catFiles.length}</span>
                                     </div>
                                     {catFiles.map(file => (
-                                        <div key={file.id} className="organized-file-row">
+                                        <div key={file.id} className="organized-file-row" onContextMenu={(e) => handleContextMenu(e, file, cat)}>
                                             <span className="org-file-icon" onClick={() => setPreviewFile(file)}>{getFileIcon(file.extension)}</span>
                                             <span className="org-file-name" onClick={() => setPreviewFile(file)}>{file.name}</span>
                                             <span className="org-file-size">{file.size}</span>
@@ -835,6 +885,7 @@ export default function Dashboard() {
                         <tbody>
                             {displayedFiles.map((file, idx) => (
                                 <tr key={file.id}
+                                    onContextMenu={(e) => handleContextMenu(e, file, null)}
                                     style={currentFileIndex >= 0 && idx <= currentFileIndex ? { opacity: .28, transition: 'all .2s' } : {}}>
                                     <td>
                                         <div className="file-name-cell" onClick={() => setPreviewFile(file)}>
@@ -891,6 +942,38 @@ export default function Dashboard() {
                     onDelete={deleteFile}
                     isOrganized={isOrganized}
                 />
+            )}
+
+            {/* Context Menu */}
+            {contextMenu && (
+                <div
+                    className="context-menu"
+                    style={{ top: contextMenu.y, left: contextMenu.x }}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className="cm-header">
+                        <span className="cm-icon">{getFileIcon(contextMenu.file.extension)}</span>
+                        <div className="cm-title">
+                            <div className="cm-name">{contextMenu.file.name}</div>
+                            <div className="cm-size">{contextMenu.file.size}</div>
+                        </div>
+                    </div>
+                    <div className="cm-divider" />
+                    <button className="cm-item" onClick={() => { setPreviewFile(contextMenu.file); setContextMenu(null); }}>
+                        <span>👁️</span> Preview
+                    </button>
+                    <button className="cm-item" onClick={() => { toggleFavorite(contextMenu.file.id); setContextMenu(null); }}>
+                        <span>{contextMenu.file.isFavorite ? '☆' : '⭐'}</span>
+                        {contextMenu.file.isFavorite ? 'Remove Favorite' : 'Mark Favorite'}
+                    </button>
+                    <button className="cm-item" onClick={() => { handleDownload(contextMenu.file); setContextMenu(null); }}>
+                        <span>⬇️</span> Download
+                    </button>
+                    <div className="cm-divider" />
+                    <button className="cm-item danger" onClick={() => { deleteFile(contextMenu.file.id, isOrganized, contextMenu.cat); setContextMenu(null); }}>
+                        <span>🗑️</span> Move to Trash
+                    </button>
+                </div>
             )}
         </div>
     );
