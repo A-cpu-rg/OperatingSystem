@@ -3,40 +3,45 @@ import { useFileSystem } from '../context/FileSystemContext';
 
 export default function Terminal() {
     const { terminalLines } = useFileSystem();
-    const contentRef = useRef(null);
+    const bodyRef = useRef(null);
 
     useEffect(() => {
-        if (contentRef.current) {
-            contentRef.current.scrollTop = contentRef.current.scrollHeight;
+        if (bodyRef.current) {
+            bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
         }
     }, [terminalLines]);
 
     return (
-        <div className="terminal">
-            <div className="terminal-header">
+        <div className="terminal-card">
+            <div className="terminal-bar">
                 <div className="terminal-dots">
-                    <div className="terminal-dot red"></div>
-                    <div className="terminal-dot yellow"></div>
-                    <div className="terminal-dot green"></div>
+                    <div className="terminal-dot r" />
+                    <div className="terminal-dot y" />
+                    <div className="terminal-dot g" />
                 </div>
-                <span className="terminal-title">file_organizer — Terminal</span>
+                <span className="terminal-bar-title">file_organizer — OS System Calls</span>
             </div>
-            <div className="terminal-content" ref={contentRef}>
+            <div className="terminal-body" ref={bodyRef}>
                 {terminalLines.map((line, idx) => (
-                    <div key={idx} className={`terminal-line terminal-${line.type}`}>
+                    <div key={idx}>
                         {line.type === 'prompt' ? (
                             <>
-                                <span className="terminal-prompt">❯ </span>
-                                <span className="terminal-command">{line.text.replace('$ ', '')}</span>
+                                <span className="t-prompt">❯ </span>
+                                <span className="t-cmd">{line.text.replace('$ ', '')}</span>
                             </>
                         ) : (
-                            line.text
+                            <span className={
+                                line.type === 'success' ? 't-ok' :
+                                    line.type === 'error' ? 't-err' : 't-out'
+                            }>
+                                {line.text}
+                            </span>
                         )}
                     </div>
                 ))}
-                <div className="terminal-line">
-                    <span className="terminal-prompt">❯ </span>
-                    <span style={{ opacity: 0.5 }}>_</span>
+                <div>
+                    <span className="t-prompt">❯ </span>
+                    <span style={{ opacity: 0.4 }}>_</span>
                 </div>
             </div>
         </div>
