@@ -12,8 +12,6 @@ export default function Sidebar() {
         { id: 'iNode Table', icon: '🗂️', label: 'iNode Table' },
         { id: 'Analytics', icon: '📈', label: 'Analytics' },
         { id: 'Notifications', icon: '🔔', label: 'Notifications', badge: unreadCount || null, badgeColor: 'var(--accent)' },
-        { divider: true },
-        { id: 'Settings', icon: '⚙️', label: 'Settings' },
         { id: 'Help', icon: '❓', label: 'Help' },
     ];
 
@@ -69,7 +67,7 @@ export default function Sidebar() {
                 <div className="sidebar-user" style={{ marginTop: 16 }}>
                     <div className="sidebar-avatar">AM</div>
                     <div className="sidebar-user-info">
-                        <div className="sidebar-user-name">Abhishek Meena</div>
+                        <div className="sidebar-user-name">Team : Alpha</div>
                         <div className="sidebar-user-role">OS Project 2026</div>
                     </div>
                 </div>
