@@ -38,6 +38,8 @@ export function FileSystemProvider({ children }) {
     const [notifications, setNotifications] = useState([
         { id: generateId(), type: 'info', unread: true, title: 'Welcome to FileOrganizer!', desc: 'Upload files from your system to get started. Click "Upload" to select files.', time: 'Just now' },
     ]);
+    const [toasts, setToasts] = useState([]); // ✅ Real-time floating toasts
+    const MAX_STORAGE = 1024 ** 3; // 1 GB (demo limit)
 
     // ── syscall logger ───────────────────────────────────────────────
     const syslog = useCallback((call, result = '0', type = 'ok') => {
@@ -45,13 +47,23 @@ export function FileSystemProvider({ children }) {
         setSyscallLogs(prev => [{ id: generateId(), time: t, call, result, type }, ...prev].slice(0, 120));
     }, []);
 
-    // ── addNotification ──────────────────────────────────────────────
+    // ── addNotification & Toast ──────────────────────────────────────
+    const removeToast = useCallback((id) => {
+        setToasts(prev => prev.filter(t => t.id !== id));
+    }, []);
+
     const addNotification = useCallback((type, title, desc) => {
+        const id = generateId();
         setNotifications(prev => [
-            { id: generateId(), type, title, desc, time: 'Just now', unread: true },
+            { id, type, title, desc, time: 'Just now', unread: true },
             ...prev,
         ].slice(0, 25));
-    }, []);
+
+        // Spawn toast
+        const toastId = generateId();
+        setToasts(prev => [...prev, { id: toastId, type, title, desc }]);
+        setTimeout(() => removeToast(toastId), 4000); // Auto-dismiss after 4s
+    }, [removeToast]);
 
     // ── organize ─────────────────────────────────────────────────────
     const organize = useCallback(async () => {
@@ -229,10 +241,13 @@ export function FileSystemProvider({ children }) {
         return counts;
     }, [files, organizedFiles, isOrganized]);
 
-    // ── notifications helpers ─────────────────────────────────────────
+    // ── notifications & toasts helpers ────────────────────────────────
     const markAllRead = useCallback(() => setNotifications(prev => prev.map(n => ({ ...n, unread: false }))), []);
     const clearNotif = useCallback((id) => setNotifications(prev => prev.filter(n => n.id !== id)), []);
     const unreadCount = notifications.filter(n => n.unread).length;
+
+    const totalUsedBytes = files.reduce((acc, f) => acc + parseBytes(f.size), 0);
+    const storagePercent = Math.min(100, (totalUsedBytes / MAX_STORAGE) * 100);
 
     return (
         <FileSystemContext.Provider value={{
@@ -244,6 +259,7 @@ export function FileSystemProvider({ children }) {
             trash, restoreFile, emptyTrash,
             syscallLogs,
             notifications, markAllRead, clearNotif, unreadCount, addNotification,
+            toasts, removeToast, totalUsedBytes, MAX_STORAGE, storagePercent,
             categories,
         }}>
             {children}

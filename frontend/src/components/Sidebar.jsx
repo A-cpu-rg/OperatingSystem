@@ -1,7 +1,7 @@
-import { useFileSystem } from '../context/FileSystemContext';
+import { useFileSystem, fmtBytes } from '../context/FileSystemContext';
 
 export default function Sidebar() {
-    const { currentView, setCurrentView, unreadCount, trash } = useFileSystem();
+    const { currentView, setCurrentView, unreadCount, trash, totalUsedBytes, MAX_STORAGE, storagePercent } = useFileSystem();
 
     const navItems = [
         { id: 'Dashboard', icon: '📊', label: 'Dashboard' },
@@ -50,7 +50,23 @@ export default function Sidebar() {
             </nav>
 
             <div className="sidebar-footer">
-                <div className="sidebar-user">
+                <div className="sidebar-storage">
+                    <div className="sidebar-storage-header">
+                        <span>Storage</span>
+                        <span>{storagePercent.toFixed(1)}%</span>
+                    </div>
+                    <div className="sidebar-storage-track">
+                        <div
+                            className={`sidebar-storage-fill ${storagePercent > 90 ? 'danger' : storagePercent > 75 ? 'warning' : ''}`}
+                            style={{ width: `${storagePercent}%` }}
+                        />
+                    </div>
+                    <div className="sidebar-storage-text">
+                        {fmtBytes(totalUsedBytes)} of {fmtBytes(MAX_STORAGE)} used
+                    </div>
+                </div>
+
+                <div className="sidebar-user" style={{ marginTop: 16 }}>
                     <div className="sidebar-avatar">AM</div>
                     <div className="sidebar-user-info">
                         <div className="sidebar-user-name">Abhishek Meena</div>
