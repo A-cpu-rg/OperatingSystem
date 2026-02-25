@@ -50,7 +50,6 @@ gdb ./file_organizer
 
 ---
 
-## 📑 Evaluation Rubric Alignment (30 Marks Focus)
 
 This repository is structured to directly address the evaluation parameters for Documentation & GitHub:
 
