@@ -249,6 +249,10 @@ body {
   background: var(--bg-main);
 }
 
+.main-content>* {
+  flex-shrink: 0;
+}
+
 .main-content::-webkit-scrollbar {
   width: 5px;
 }
@@ -478,7 +482,9 @@ body {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
+  flex-shrink: 0;
 }
+
 
 .file-table-header {
   display: flex;

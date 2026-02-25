@@ -27,6 +27,7 @@ function PreviewModal({ file, onClose, onToggleFav, onDelete, isOrganized }) {
     const isImg = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp'].includes(ext);
     const isVid = ['mp4', 'mkv', 'mov', 'avi', 'webm'].includes(ext);
     const isAudio = ['mp3', 'wav', 'flac', 'aac', 'ogg'].includes(ext);
+    const isPdf = ext === 'pdf';
 
     const handleDownload = () => {
         if (!file.originalFile) { alert('Demo files cannot be downloaded. Upload a real file to download it.'); return; }
@@ -58,6 +59,8 @@ function PreviewModal({ file, onClose, onToggleFav, onDelete, isOrganized }) {
                             <div className="preview-placeholder-icon">🎵</div>
                             <audio src={objUrl} controls className="preview-audio" />
                         </div>
+                    ) : isPdf ? (
+                        <iframe src={objUrl} title={file.name} style={{ width: '100%', height: '400px', border: 'none', borderRadius: 8, background: 'white' }} />
                     ) : text !== null ? (
                         <div className="preview-code">{text.slice(0, 3000)}{text.length > 3000 ? '\n\n... (truncated)' : ''}</div>
                     ) : (
