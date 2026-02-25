@@ -33,6 +33,21 @@ npm run dev
 # Open http://localhost:5173
 ```
 
+### Testing (Shell Script)
+```bash
+# Run the automated test script
+chmod +x test.sh
+./test.sh
+```
+
+### Debugging with GDB
+```bash
+cd backend
+make debug
+gdb ./file_organizer
+# Example: break main, run, step
+```
+
 ---
 
 ## 🎯 OS Concepts Demonstrated
