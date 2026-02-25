@@ -253,7 +253,7 @@ function InodeTablePage({ files, trash }) {
 
             <div className="upload-banner">
                 <div>
-                    <h2>📚 What is an iNode?</h2>
+                    <h2> What is an iNode?</h2>
                     <p>Every file in a Unix/Linux filesystem has an iNode — a data structure storing metadata: permissions, owner, size, timestamps, and pointers to data blocks. The filename itself is just a directory entry pointing to an iNode number.</p>
                 </div>
             </div>
@@ -398,7 +398,7 @@ function NotificationsPage({ notifications, markAllRead, clearNotif }) {
                     <div className="page-title">Notifications</div>
                     <div className="page-sub">{notifications.filter(n => n.unread).length} unread</div>
                 </div>
-                <button className="btn btn-outline btn-sm" onClick={markAllRead}>✅ Mark all read</button>
+                <button className="btn btn-outline btn-sm" onClick={markAllRead}> Mark all read</button>
             </div>
             <div className="notif-list">
                 {notifications.length === 0 && (
