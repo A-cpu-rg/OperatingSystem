@@ -80,8 +80,7 @@ Using `rename()` effectively ensures atomicity. During an operation, if the prog
 
 ### B. Npm Registry Wrapper
 To distribute the utility, the C backend logic was complemented by an NPM TypeScript application that leverages libraries like `commander` and `@inquirer/prompts`. Available commands:
-- `preview`: Logs what actions will be taken.
-- `organize`: Executes the sorting.
+- `preview`: Logs what actions will be taken.- `organize`: Executes the sorting.
 - `watch`: A daemon-like execution continually monitoring a directory.
 - `undo` & `history`: Provides logs and reverts past operations.
 
@@ -103,10 +102,3 @@ The frontend provides a visualization of an OS file manager. Users upload files 
 | `rename()` | Guaranteeing atomic process relocation. |
 | `unlink()` | Modeled in the React TRASH view. |
 
-*(A journal-based rollback mechanism also ensures operations can be cleanly reverted, mirroring advanced filesystem capabilities).*
-
----
-
-## 📚 References
-1. W. R. Stevens and S. A. Rago, *Advanced Programming in the UNIX Environment*, 3rd ed. Addison-Wesley Professional, 2013.
-2. Node.js Foundation, "Node.js Documentation," [Online]. Available: https://nodejs.org/en/docs/
